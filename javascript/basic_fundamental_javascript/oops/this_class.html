@@ -1,0 +1,39 @@
+<script>
+class abc
+{
+	constructor(a,b)
+	{
+		this.a=a;
+		this.b=b;
+	}
+	sum()
+	{
+		document.write(`sum of a & b are ${this.a+this.b} <br>`);
+	}
+	multi()
+	{
+		document.write(`Multi of a & b are ${this.a*this.b} <br>` );
+	}
+}
+class xyz extends abc
+{	
+	constructor(a,b,c)
+	{
+		super(a,b);
+		this.c=c;
+	}
+	sum1()
+	{
+		document.write(`sum of a & b & c are ${this.a+this.b+this.c}`);
+	}
+}
+
+
+const obj= new xyz(5,7,8);
+obj.sum();
+obj.multi();
+obj.sum1();
+
+</script>
+
+
