@@ -25,6 +25,8 @@ async function onlogin(e) {
     const res= await axios.post(`http://localhost:8000/api/login`,formvalue)
         if(res.data.status === 200)
         {
+          localStorage.setItem('name',res.data.name);
+          localStorage.setItem('id',res.data.id);
             //alert(res.data.msg);
             swal({
                 title: "Success",
@@ -35,13 +37,19 @@ async function onlogin(e) {
             SetForm({...formvalue,email:"",password:""})
             setErr_msg([]);
 
-            localStorage.setItem('email',formvalue.email);
+           
             navigate('/dashboard');
         }
         else
         {
             setErr_msg(res.data.message)
             console.log([err_msg]);
+            swal({
+              title: "failed",
+              text: res.data.message,
+              icon: "Failed",
+              button: "Ok!",
+          });
         }
     }
 

@@ -4,7 +4,7 @@ function Header() {
   
   const navigate=useNavigate()
   useEffect(()=>{
-    if(localStorage.getItem('email'))
+    if(localStorage.getItem('id'))
     {
 
     }
@@ -13,6 +13,14 @@ function Header() {
       navigate('/index');
     }
   },[])
+  
+	function logout()
+	{
+		localStorage.removeItem("id");
+    localStorage.removeItem("name");
+		navigate('/index');
+
+	}
   
   return (
       <div id="wrapper">
@@ -99,12 +107,12 @@ function Header() {
                   </ul>
                 </li>
                 <li className="dropdown">
-                  <a href="#" className="dropdown-toggle dropdown-at" data-toggle="dropdown"><span className=" name-caret">Rackham<i className="caret" /></span><img src="images/wo.jpg" /></a>
+                  <a href="#" className="dropdown-toggle dropdown-at" data-toggle="dropdown"><span className=" name-caret">{localStorage.getItem('name')}<i className="caret" /></span><img src="images/wo.jpg" /></a>
                   <ul className="dropdown-menu " role="menu">
-                    <li><a href="profile.html"><i className="fa fa-user" />Edit Profile</a></li>
+                    <li><Link to="/profile"><i className="fa fa-user" />Edit Profile</Link></li>
                     <li><a href="inbox.html"><i className="fa fa-envelope" />Inbox</a></li>
                     <li><a href="calendar.html"><i className="fa fa-calendar" />Calender</a></li>
-                    <li><a href="inbox.html"><i className="fa fa-clipboard" />Tasks</a></li>
+                    <li><a href="#" onClick={logout}><i className="fa fa-clipboard" />Logout</a></li>
                   </ul>
                 </li>
               </ul>

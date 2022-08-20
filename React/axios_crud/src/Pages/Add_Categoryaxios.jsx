@@ -9,17 +9,27 @@ function Add_Categoryaxios() {
         name:"",
         email:"",
         password:"",
+		file:"",
        
-    })
+    });
+
+    function changeFile(e)
+	{
+		SetForm({...formvalue, file:e.target.files[0]});
+		console.log(formvalue);
+	}
     function changeHandel(e)
     {
         const {name,value}=e.target;
         SetForm({...formvalue, [name]:value});
-        //console.log(formvalue);
+        console.log(formvalue);
     }
+	
     const [err_msg,setErr_msg]=useState([]);
     async function submitHandel(e) {
         e.preventDefault();
+        const data = new FormData() 
+        data.append('file',formvalue.file);
         const res= await axios.post(`http://localhost:8000/api/insertstudent`,formvalue)
             if(res.data.status === 200)
             {
@@ -30,7 +40,7 @@ function Add_Categoryaxios() {
                     icon: "success",
                     button: "Ok!",
                 });
-                SetForm({...formvalue,name:"",email:"",password:""})
+                SetForm({...formvalue,name:"",email:"",password:"",file:""})
                 setErr_msg([]);
                 //console.log(res.data.msg);
             }
@@ -58,7 +68,7 @@ function Add_Categoryaxios() {
                 <div className="validation-system">
                     <div className="validation-form">
                         {/**/}
-                        <form method="post">
+                        <form method="post" onSubmit={submitHandel} entype="multipart/form-data">
                             <div className="vali-form">
                                 <div className="col-md-12 form-group1">
                                     <label className="control-label"> Name</label>
@@ -73,11 +83,17 @@ function Add_Categoryaxios() {
                                     <input type="text" name="email" onChange={changeHandel} value={formvalue.email} placeholder="email" required />
                                     <span className='text-danger'>{err_msg.email}</span>
                             </div>
+							 <div className="col-md-12 form-group1">
+                                    <label className="control-label"> File Upload</label>
+                                    <input type="file" onChange={changeFile}  multiple/>
+                                    <span className='text-danger'>{err_msg.file}</span>
+                            </div>
                             <div className="col-md-12 form-group1">
                                     <label className="control-label"> password</label>
                                     <input type="password" name="password" onChange={changeHandel} value={formvalue.password} placeholder="password" required />
                                     <span className='text-danger'>{err_msg.password}</span>
                             </div>
+							
                             <div className="clearfix"> </div>
                             <br/>
                             <br/>
@@ -85,7 +101,7 @@ function Add_Categoryaxios() {
                             
                             <div className="clearfix"> </div>
                             <div className="col-md-12 form-group">
-                                <button type="submit" onClick={submitHandel} className="btn btn-primary">Submit</button>
+                                <button type="submit"  className="btn btn-primary">Submit</button>
                                 <button type="reset" className="btn btn-default">Reset</button>
                             </div>
                             <div className="clearfix"> </div>

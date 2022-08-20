@@ -32,7 +32,7 @@ class student_controller extends Controller
 		 'students'=>$data
 		 ]);
     }
-	
+
 	function search($key) 	
     {
          $data=student::where('name','LIKE',"%$key%")->orWhere('email','LIKE','%'.$key.'%')->get();
@@ -76,7 +76,8 @@ class student_controller extends Controller
 		$validate=Validator::make($request->all(),[
             'name'=>'Required|regex:/[a-zA-Z\s]+/',
             'email'=>'Required|email',
-            'password'=>'Required'
+            'password'=>'Required',
+			'file'=>'Required',
         ]);
 		
 		if($validate->fails())
@@ -98,7 +99,15 @@ class student_controller extends Controller
 			$token=$data->token=Hash::make($request->email);
 			
 			
+			//$data->file=$request->file;
 			
+			if($request->has('file')) {
+            foreach($request->file('file') as $image) {
+                $filename = time().rand(3). '.'.$image->getClientOriginalExtension();
+                $image->move('upload/', $filename);
+				$data->file=$filename;		
+				}
+			}	
 			$data->save();
 			return response()->json([
 			'status'=>200,
@@ -241,6 +250,7 @@ class student_controller extends Controller
 					'status'=>200,
 					'message'=>"student Login Success",
 					'name'=>$student->name,
+					'id'=>$student->id,
 					'token'=>$student->token
 					]);
 				}

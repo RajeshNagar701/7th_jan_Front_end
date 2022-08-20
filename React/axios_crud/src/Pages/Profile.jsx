@@ -1,8 +1,38 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import swal from 'sweetalert';
+
+import axios from 'axios';
+
 
 function Profile() {
+
+    useEffect(() => {
+        fetchAll();
+    }, []);
+    
+    const [alldata, Setalldata] = useState({});
+    
+    async function fetchAll() {
+    
+        const res = await axios.get(`http://localhost:8000/api/student/${localStorage.getItem('id')}`);
+        // console.log(res);
+        if(res.data.status===200)
+        {
+            Setalldata(res.data.students);
+            
+            console.log(alldata);
+
+        }
+    };
+
+
     return (
+
+        
+            
         <div>
+            
             <div className=" profile">
                 <div className="profile-bottom">
                     <h3><i className="fa fa-user" />Profile</h3>
