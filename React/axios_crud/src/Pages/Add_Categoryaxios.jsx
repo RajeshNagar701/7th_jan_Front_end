@@ -4,33 +4,43 @@ import swal from 'sweetalert';
 import axios from 'axios';
 
 function Add_Categoryaxios() {
-
+	
+	
     const [formvalue,SetForm]=useState({
         name:"",
         email:"",
         password:"",
-		file:"",
+        fileName:""
        
     });
-
-    function changeFile(e)
-	{
-		SetForm({...formvalue, file:e.target.files[0]});
-		console.log(formvalue);
-	}
-    function changeHandel(e)
+    const [file, setFile] = useState();
+	function changeHandel(e)
     {
         const {name,value}=e.target;
         SetForm({...formvalue, [name]:value});
         console.log(formvalue);
     }
 	
+    function changeFile(e)
+	{
+        setFile(e.target.files[0]);
+		SetForm({...formvalue,fileName:e.target.files[0].name});
+		//console.log(formvalue);
+	}
+    
+	
     const [err_msg,setErr_msg]=useState([]);
     async function submitHandel(e) {
         e.preventDefault();
-        const data = new FormData() 
-        data.append('file',formvalue.file);
-        const res= await axios.post(`http://localhost:8000/api/insertstudent`,formvalue)
+        const formData = new FormData();
+        formData.append('name',formvalue.name);
+        formData.append('email',formvalue.email);
+        formData.append('password',formvalue.password);
+        formData.append('fileName',formvalue.fileName);
+
+        formData.append("file",file);
+        
+        const res= await axios.post(`http://localhost:8000/api/insertstudent`,formData)
             if(res.data.status === 200)
             {
                 //alert(res.data.msg);
@@ -40,9 +50,7 @@ function Add_Categoryaxios() {
                     icon: "success",
                     button: "Ok!",
                 });
-                SetForm({...formvalue,name:"",email:"",password:"",file:""})
-                setErr_msg([]);
-                //console.log(res.data.msg);
+                
             }
             else
             {
@@ -68,40 +76,35 @@ function Add_Categoryaxios() {
                 <div className="validation-system">
                     <div className="validation-form">
                         {/**/}
-                        <form method="post" onSubmit={submitHandel} entype="multipart/form-data">
-                            <div className="vali-form">
-                                <div className="col-md-12 form-group1">
+                        <form method="post"  entype="multipart/form-data">
+                             
+                            <div className="col-md-12 form-group1">
                                     <label className="control-label"> Name</label>
-                                    <input type="text" name="name" onChange={changeHandel} value={formvalue.name} placeholder="name" required />
+                                    <input type="text" name="name" value={formvalue.name} onChange={changeHandel} />
                                     <span className='text-danger'>{err_msg.name}</span>
-                                </div>
-                               
-                                <div className="clearfix"> </div>
                             </div>
                             <div className="col-md-12 form-group1">
                                     <label className="control-label"> email</label>
-                                    <input type="text" name="email" onChange={changeHandel} value={formvalue.email} placeholder="email" required />
+                                    <input type="text" name="email" value={formvalue.email} onChange={changeHandel} />
                                     <span className='text-danger'>{err_msg.email}</span>
-                            </div>
-							 <div className="col-md-12 form-group1">
-                                    <label className="control-label"> File Upload</label>
-                                    <input type="file" onChange={changeFile}  multiple/>
-                                    <span className='text-danger'>{err_msg.file}</span>
                             </div>
                             <div className="col-md-12 form-group1">
                                     <label className="control-label"> password</label>
-                                    <input type="password" name="password" onChange={changeHandel} value={formvalue.password} placeholder="password" required />
+                                    <input type="password" name="password" value={formvalue.password} onChange={changeHandel} />
                                     <span className='text-danger'>{err_msg.password}</span>
                             </div>
-							
-                            <div className="clearfix"> </div>
-                            <br/>
-                            <br/>
+                           
+							 <div className="col-md-12 form-group1">
+                                    <label className="control-label"> File Upload</label>
+                                    <input type="file" onChange={changeFile} />
+                                    <span className='text-danger'>{err_msg.file}</span>
+                            </div>
+                            
 
                             
                             <div className="clearfix"> </div>
                             <div className="col-md-12 form-group">
-                                <button type="submit"  className="btn btn-primary">Submit</button>
+                                <button type="submit" onClick={submitHandel}  className="btn btn-primary">Submit</button>
                                 <button type="reset" className="btn btn-default">Reset</button>
                             </div>
                             <div className="clearfix"> </div>

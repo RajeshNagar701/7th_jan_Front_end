@@ -101,13 +101,11 @@ class student_controller extends Controller
 			
 			//$data->file=$request->file;
 			
-			if($request->has('file')) {
-            foreach($request->file('file') as $image) {
-                $filename = time().rand(3). '.'.$image->getClientOriginalExtension();
-                $image->move('upload/', $filename);
-				$data->file=$filename;		
-				}
-			}	
+			$file=$request->file('file');		
+			$filename=time().'_img.'.$request->file('file')->getClientOriginalExtension();
+			$file->move('upload/customer/',$filename);  // use move for move image in public/images
+			$data->file=$filename; // name store in db
+
 			$data->save();
 			return response()->json([
 			'status'=>200,
